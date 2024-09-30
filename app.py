@@ -20,9 +20,10 @@ claude_model = "claude-3-5-sonnet-20240620"
 system_prompt = """
 You are an assistant that is part of a team of software developers.
 You'll be given a bulk of information and you need to extract the relevant information to create a Jira issue describing it.
-You need to reply on a JSON format including 2 keys: 'title' (string) and 'description' (string).
-'title' should be a short description of the task.
-'description' should contain clear information about the all the context you can gather about that task. Feel free to include links and lists here. Make is as short as possible.
+In your response, the first sentence should always be the title of the issue and the rest of the text should the description. 
+The 'title' should be a short description of the task.
+The 'description' should contain clear information about the all the context you can gather about that task. Feel free to include links and lists here. Make is as short as possible.
+Do not include the strings 'title' or 'description' on the response.
 """
 
 jira_url = "https://ridecircuit.atlassian.net/rest/api/2/issue"
@@ -48,16 +49,10 @@ def process_issue(issue_text, project_id, issue_id):
         "description": ""
     }
     
-    json_string = message.content[0].text
-
-    try:
-        escaped_string = re.sub(r'[\x00-\x1f\x7f-\x9f]', '\n', json_string)
-        json_object = json.loads(escaped_string)
-        jissue_dict['title'] = jissue_dict['title'] + " " + json_object['title']
-        jissue_dict['description'] = json_object['description']
-    except json.JSONDecodeError as e:
-        print(f"Error parsing JSON: {e}")
-        jissue_dict['description'] = json_string
+    issue_response = message.content[0].text
+    issue_title = issue_response.split('\n', 1)[0]
+    jissue_dict['title'] = "[JISSUE] " + issue_title.strip()
+    jissue_dict['description'] = issue_response[len(issue_title):].strip()
 
     payload = json.dumps({
             "fields": {
