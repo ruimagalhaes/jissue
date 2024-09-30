@@ -6,6 +6,7 @@ from requests.auth import HTTPBasicAuth
 import re
 from dotenv import load_dotenv
 import os
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -84,15 +85,19 @@ def issue_mobile():
     if 'text' not in data:
         return jsonify({"error": "No text provided"}), 400
     
-    return process_issue(data['text'], "10012", "10002")
+    Thread(target=process_issue, args=(data['text'], "10012", "10002")).start()
+    return jsonify("I'll see what I can do..."), 200
     
+
 @app.route('/issue-backend', methods=['POST'])
 def issue_backend():
     data = request.get_json()
     if 'text' not in data:
         return jsonify({"error": "No text provided"}), 400
     
-    return process_issue(data['text'], "10013", "10002")
+    Thread(target=process_issue, args=(data['text'], "10013", "10002")).start()
+    return jsonify("I'll see what I can do..."), 200
+   
 
 @app.route('/issue-infra', methods=['POST'])
 def issue_infra():
@@ -100,7 +105,9 @@ def issue_infra():
     if 'text' not in data:
         return jsonify({"error": "No text provided"}), 400
     
-    return process_issue(data['text'], "10014", "10002")
+    Thread(target=process_issue, args=(data['text'], "10014", "10002")).start()
+    return jsonify("I'll see what I can do..."), 200
+
 
 @app.route('/issue-test', methods=['POST'])
 def issue_test():
@@ -108,7 +115,8 @@ def issue_test():
     if 'text' not in data:
         return jsonify({"error": "No text provided"}), 400
     
-    return process_issue(data['text'], "10002", "10008")
+    Thread(target=process_issue, args=(data['text'], "10002", "10008")).start()
+    return jsonify("I'll see what I can do..."), 200
 
     
 if __name__ == '__main__':
