@@ -118,11 +118,16 @@ def issue_test():
     Thread(target=process_issue, args=(data['text'], "10002", "10008")).start()
     return jsonify("I'll see what I can do..."), 200
 
+
+@app.route('/slack-test', methods=['POST'])
+def slack_test():
+    return jsonify("I'll see what I can do..."), 200
+
+
 @app.route('/', methods=['GET'])
 def home():
     return "<p>Jissue App</p>"
 
 
-    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=1024, debug=True)
