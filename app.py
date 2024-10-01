@@ -81,52 +81,41 @@ def process_issue(issue_text, project_id, issue_id):
 
 @app.route('/issue-mobile', methods=['POST'])
 def issue_mobile():
-    data = request.get_json()
-    if 'text' not in data:
+    text = request.form.get('text', None)
+    if not text:
         return jsonify({"error": "No text provided"}), 400
     
-    Thread(target=process_issue, args=(data['text'], "10012", "10002")).start()
-    return jsonify("I'll see what I can do..."), 200
+    Thread(target=process_issue, args=(text, "10012", "10002")).start()
+    return jsonify("Ok, let me see what I can do..."), 200
     
 
 @app.route('/issue-backend', methods=['POST'])
 def issue_backend():
-    data = request.get_json()
-    if 'text' not in data:
+    text = request.form.get('text', None)
+    if not text:
         return jsonify({"error": "No text provided"}), 400
     
-    Thread(target=process_issue, args=(data['text'], "10013", "10002")).start()
-    return jsonify("I'll see what I can do..."), 200
-   
+    Thread(target=process_issue, args=(text, "10013", "10002")).start()
+    return jsonify("Ok, let me see what I can do..."), 200
 
 @app.route('/issue-infra', methods=['POST'])
 def issue_infra():
-    data = request.get_json()
-    if 'text' not in data:
+    text = request.form.get('text', None)
+    if not text:
         return jsonify({"error": "No text provided"}), 400
     
-    Thread(target=process_issue, args=(data['text'], "10014", "10002")).start()
-    return jsonify("I'll see what I can do..."), 200
+    Thread(target=process_issue, args=(text, "10014", "10002")).start()
+    return jsonify("Ok, let me see what I can do..."), 200
 
 
 @app.route('/issue-test', methods=['POST'])
 def issue_test():
-    data = request.get_json()
-    if 'text' not in data:
+    text = request.form.get('text', None)
+    if not text:
         return jsonify({"error": "No text provided"}), 400
     
-    Thread(target=process_issue, args=(data['text'], "10002", "10008")).start()
-    return jsonify("I'll see what I can do..."), 200
-
-
-@app.route('/slack-test', methods=['POST'])
-def slack_test():
-    return jsonify("I'll see what I can do..."), 200
-
-
-@app.route('/', methods=['GET'])
-def home():
-    return "<p>Jissue App</p>"
+    Thread(target=process_issue, args=(text, "10002", "10008")).start()
+    return jsonify("Ok, let me see what I can do..."), 200
 
 
 if __name__ == '__main__':
